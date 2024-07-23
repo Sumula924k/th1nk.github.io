@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Yêu Cầu</title>
+    <script>
+        function sendRequest() {
+            // Lấy giá trị từ các trường nhập liệu
+            var count = document.getElementById('count').value;
+            var sdt = document.getElementById('sdt').value;
+
+            // Tạo URL với các tham số
+            var url = `index.php?count=${count}&sdt=${sdt}`;
+
+            // Tạo đối tượng XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+
+            // Xử lý phản hồi từ máy chủ
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('result').innerText = JSON.stringify(response, null, 2);
+                } else {
+                    document.getElementById('result').innerText = 'Lỗi: ' + xhr.status;
+                }
+            };
+
+            // Xử lý lỗi
+            xhr.onerror = function() {
+                document.getElementById('result').innerText = 'Lỗi kết nối.';
+            };
+
+            // Gửi yêu cầu
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <h1>Gửi Yêu Cầu đến index.php</h1>
+    <form onsubmit="event.preventDefault(); sendRequest();">
+        <label for="count">Số Lượng:</label>
+        <input type="number" id="count" name="count" min="1" required>
+        <br><br>
+        <label for="sdt">Số Điện Thoại:</label>
+        <input type="text" id="sdt" name="sdt" required>
+        <br><br>
+        <button type="submit">Gửi Yêu Cầu</button>
+    </form>
+    <h2>Kết quả:</h2>
+    <pre id="result"></pre>
+</body>
+</html>
